@@ -2,9 +2,9 @@
 <?php
 header('Content-Type: application/javascript');
 $servername = "localhost";
-$username = "gisaps";
-$password = "gisAPS12";
-$dbname = "gisaps";
+$username = "***";
+$password = "***";
+$dbname = "***";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
