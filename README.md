@@ -1,12 +1,12 @@
-GISAPS: Geographic Information Systems in Academic Article Search
+GISAPS: Geographic Information Systems in Academic Paper Search
 
 Overview
 
-GISAPS (Geographic Information Systems in Academic Article Search) introduces an innovative framework for enhancing academic article search processes. Utilizing Geographic Information Systems (GIS), GISAPS aims to revolutionize the way researchers access and manage academic literature, offering a more efficient and effective approach.
+GISAPS (Geographic Information Systems in Academic Paper Search) introduces an innovative framework for enhancing academic paper search processes. Utilizing Geographic Information Systems (GIS), GISAPS aims to revolutionize the way researchers access and manage academic literature, offering a more efficient and effective approach.
 
 Features
 
-GIS-Based Article Search: Leverages GIS technology for intuitive and precise article searching.
+GIS-Based Paper Search: Leverages GIS technology for intuitive and precise article searching.
 Empirical Validation: Demonstrates improvements in search efficiency and effectiveness.
 Cross-disciplinary Application: Applicable across various research fields beyond geosciences.
 
