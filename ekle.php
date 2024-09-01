@@ -8,9 +8,9 @@
 <body>
 <?php
 $servername = "localhost";
-$username = "***";
-$password = "***";
-$dbname = "***";
+$username = "gisaps";
+$password = "gisAPS12";
+$dbname = "gisaps";
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection

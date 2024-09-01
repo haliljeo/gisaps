@@ -1,0 +1,328 @@
+<html>
+  <head>
+  <meta charset="UTF-8">
+    <link rel="stylesheet" href="/ol/ol.css" type="text/css">
+
+    <script>
+	var spii = "a";
+	var sbas = "a";
+	</script>
+    <style>
+      #map {
+        height: 100%;
+        width: 80%;
+      }
+	   .ol-popup {
+            font-family: 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif !important;
+            font-size: 12px;
+            position: absolute;
+            background-color: white;
+            -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+            filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #cccccc;
+            bottom: 12px;
+            left: -50px;
+            min-width: 100px;
+        }
+
+        .ol-popup:after,
+        .ol-popup:before {
+            top: 100%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+		#marker {
+				width: 20px;
+				height: 20px;
+				border: 1px solid #088;
+				border-radius: 10px;
+				background-color: #FF;
+				opacity: 0.5;
+			}
+        .ol-popup:after {
+            border-top-color: white;
+            border-width: 10px;
+            left: 48px;
+            margin-left: -10px;
+        }
+
+        .ol-popup:before {
+            border-top-color: #cccccc;
+            border-width: 11px;
+            left: 48px;
+            margin-left: -11px;
+        }
+
+        .ol-popup-closer {
+            text-decoration: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+        }
+
+        .ol-popup-closer:after {
+            content: "✖";
+            color: #c3c3c3;
+        }
+		#map {
+          width: 80%;
+          height: 100%;
+          float:left;
+          
+      }
+      		#map2 {
+          width: 80%;
+          height: 100%;
+          float:left;
+          
+      }
+      #sol {
+        width: 20%;
+        height: 100%;
+        float:left; 
+        text-align:center;
+        background-color:#EBF5FB ;
+      }
+      .sonuc1{
+          width:100%;
+          background-color:#ccc;
+          margin-top:5px;
+      }
+      .sonuc2{
+          width:100%;
+          background-color:#cfa;
+          margin-top:5px;
+      }
+	  #bilgi{
+		visibility: hidden;
+		 width: 20%;
+        height: 100%;
+		  
+	  }
+	  #fbilgi{
+		
+		width: 100%;
+        height: 100%; 
+		  
+	  }
+    </style>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
+    <title>CTMA | CBS Tabanlı Makale Arama | Halil BÖLÜK -  2020</title>
+  </head>
+  <body>
+  
+	 <div id="sol">
+        
+        <div id="logo"> <img src="logo.png" width="200px"></div>
+        
+        <br> Search<br>
+    <input type="text" id="metin">
+            <button id="ara">Ara</button>
+<div id="kayit">Total Article Located: 223</div>
+<hr>Created By Halil BÖLÜK <br>(MSc. Geological Engineer )
+<hr> Results 
+            <div id="sonuclar"></div>
+
+        </div>
+    <div id="map" class="map"></div>
+    <div id="bilgi" class="bilgi"><button>KAPAT</button><iframe id="fbilgi" src="" ></iframe></div>
+    <div id="popup" class="ol-popup">
+         <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+         <div id="popup-content"></div>
+ 	</div>
+
+    <script type="text/javascript">
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: [3848973, 4790288],
+          zoom: 6
+        })
+      });
+	  
+	  function ekle(cc){
+		var formData = new FormData();
+
+		formData.append("p", spii);
+		 formData.append("b", sbas); 
+		 formData.append("s", cc); 
+		 var request = new XMLHttpRequest();
+		 request.open("POST", "ekle.php");
+		request.send(formData);
+	 
+	  var layer = new ol.layer.Vector({
+			 source: new ol.source.Vector({
+				 features: [
+					 new ol.Feature({
+						 geometry: new ol.geom.Point(cc),
+						 bilgi : sbas,
+						 bpii : spii,
+					 })
+				 ]
+			 })
+		 });
+		 layer.setZIndex(9999);
+		 map.addLayer(layer);
+		  
+	  }
+	  
+function ree(){
+	      var vectorSource = new ol.source.Vector({
+        format: new ol.format.WFS(), // Fix your wrong `new ol.format.WFS({gmlFormat: new ol.format.GML({srsName: 'Nothing'})})
+        loader: function(extent, resolution, projection) {
+          // Changed the url to use WFS 1.1.0 in order to use GML 3.1.1 (if you use WFS 1.0.0, GML version 2.1.2 and I had some issues)
+          var url = 'https://mrdata.usgs.gov/wfs/ree?request=getfeature&service=WFS&version=1.1.0&typename=ree';
+          // Use fetch, more simple & modern instead of XMLHttpRequest
+          fetch(url).then(function(response) {
+            return response.text();
+          }).then(function(text) {
+            // Reproject feature (EPSG 4326) to map projection e.g EPSG:3857
+            var features = vectorSource.getFormat().readFeatures(text, {
+              dataProjection: 'EPSG:4326',
+              featureProjection: 'EPSG:900913'
+            });
+            vectorSource.addFeatures(features);
+          }).catch(function(error) {
+            console.log(error.message);
+          })
+        }
+      });
+
+      var vector = new ol.layer.Vector({
+        source: vectorSource,
+        style: new ol.style.Style({
+          fill: new ol.style.Fill({
+            color: 'red'
+          })
+        })
+      });
+      
+     map.addLayer(vector);
+    
+}
+function mta(katman,stil){
+     var layer1 = new ol.layer.Tile({
+            source: new ol.source.TileWMS({
+            url: 'http://yerbilimleri.mta.gov.tr:8080/geoserver/MTA/wms',
+            params: {'SERVICE': 'WMS', 'VERSION': '1.1.0','TRANSPARENT':'TRUE','TILED':'true','LAYERS':katman,'FORMAT':'image/png','STYLES':stil,'TILESORIGIN':'-20037508.34,-20037508.34','REQUEST':'GetMap','SRS':'EPSG:900913','WIDTH':256,'HEIGHT':'256'},
+            serverType: 'geoserver',
+            // Countries have transparency, so do not fade tiles:
+            transition: 0,
+            }),
+        }) ;
+        layer1.setZIndex(0);
+		 map.addLayer(layer1);
+		  
+}  
+
+
+		function git(url)
+		{
+		window.open(url,'', 'toolbar=0,scrollbars=2,location=0,statusbar=1,menubar=0,resizable=0,width=500,height=600,left = 200,top = 100');
+		}
+
+
+
+
+	  	var container = document.getElementById('popup');
+		 var content = document.getElementById('popup-content');
+		 var closer = document.getElementById('popup-closer');
+		
+		 var overlay = new ol.Overlay({
+			 element: container,
+			 autoPan: true,
+			 autoPanAnimation: {
+				 duration: 250
+			 }
+		 });
+		 map.addOverlay(overlay);
+		
+		 closer.onclick = function() {
+			 overlay.setPosition(undefined);
+			 closer.blur();
+			 return false;
+		 };
+		 
+			map.on('singleclick', function (event) {
+			 if (map.hasFeatureAtPixel(event.pixel) === true) {
+				 var iconFeatureA = map.getFeaturesAtPixel(event.pixel);
+				 var coordinate = event.coordinate;
+				 var bilgi = iconFeatureA[0].get("bilgi");
+				 var bpii = iconFeatureA[0].get("bpii");
+				 var site = "https://www.sciencedirect.com/science/article/pii/" + bpii;
+    				content.innerHTML = "<b>"+bpii+"</b><br />"+bilgi+"<br /><button onclick=git('"+site+"')>MAKALEYE GİT</button>";
+    				event.preventDefault(); // avoid bubbling 
+				 overlay.setPosition(coordinate);
+			 } else {
+				  var coordinate = event.coordinate;
+				    if(spii=='a'){
+			  			alert("Önce soldan arama yapınız ve makale seçiniz");
+						overlay.setPosition(0,0);
+		  			}else{
+						content.innerHTML = '<b>'+spii+'</b><br />'+sbas+'<br /><button onclick=ekle(['+coordinate+'])>MAKALEYİ EKLE</button>';
+				 		overlay.setPosition(coordinate);
+					}
+				 closer.blur();
+			 }
+ });
+   			
+   			function form(pii,metin){
+				spii=pii;
+				sbas=metin;
+				
+			}
+   
+            document.getElementById("ara").onclick = function(){
+                var metin = document.getElementById("metin").value;
+                
+                $.getJSON('https://api.elsevier.com/content/search/sciencedirect?apiKey=0210d621d87b92248edb2cf2eb37751e&query='+ metin +'&httpAccept=application/json', function(data) {
+                    var obj = (data["search-results"]["entry"]);
+                    var sonuc='';
+                    var say=1;
+                    var cl = "sonuc1";
+                    $.each(obj, function() {
+						
+                        sonuc = sonuc + "<div class="+cl+">";
+						sonuc = sonuc + "<input type=radio onclick='dene" + say + "(" + say +")' id=b" + say +" name=pii value=" + this['pii'] + "/>";
+						sonuc = sonuc + "  <label for=" + this['pii'] + ">" + this['pii'] + "</label><br>" ;
+						sonuc = sonuc + this['dc:title'] + "</div>";
+						sonuc = sonuc + "<script> function dene" + say + "(){";
+						sonuc = sonuc + "form('" + this['pii'] +"','" + this['dc:title'] +"')";
+						sonuc = sonuc + "} <\/script>" ;
+                        say = say + 1;
+						if(cl=="sonuc1"){cl="sonuc2";}else{cl="sonuc1";}
+                    });
+                    $('#sonuclar').html(sonuc);
+                });
+            }
+        	
+			
+			
+
+    </script>
+    <!-- wfs -->
+
+    
+    
+    
+     <script  src="noktalar.php"></script>
+   
+
+  </body>
+</html>

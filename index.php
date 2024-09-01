@@ -119,14 +119,14 @@
    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 	
-    <title>CTMA | CBS Tabanlı Makale Arama | Halil BÖLÜK -  2020</title>
+    <title>GISAPS | The Geographic Information Systems based Academic Publication Search </title>
   </head>
   <body>
   
 	 <div id="sol">
         
         <div id="logo"> <img src="logo.png" width="200px"><br>
-        GIS based Academic Paper Search System </div>
+        GIS based Academic Publication Search  </div>
         
         <br> Search<br>
     <input type="text" id="metin">
@@ -144,7 +144,7 @@
 
         </div>
     <div id="map" class="map"></div>
-    <div id="bilgi" class="bilgi"><button>KAPAT</button><iframe id="fbilgi" src="" ></iframe></div>
+    <div id="bilgi" class="bilgi"><button>Close</button><iframe id="fbilgi" src="" ></iframe></div>
     <div id="popup" class="ol-popup">
          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
          <div id="popup-content"></div>
@@ -320,9 +320,9 @@ document.getElementById('usaStates').addEventListener('change', function() {
     <?php
 
 $servername = "localhost";
-$username = "***";
-$password = "***";
-$dbname = "***";
+$username = "gisaps";
+$password = "gisAPS12";
+$dbname = "gisaps";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
